@@ -42,20 +42,17 @@ def naked_twins(values):
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
     for unit in unitlist:
-        
         val_two_list = [values[box] for box in unit if len(values[box]) == 2]
         # make the list unique
         val_two_set = set(val_two_list)
-        
         # a naked twin value is with length 2 and count 2
         for val in val_two_set:
             if val_two_list.count(val) == 2:
-                # This is a twin
+                # This is a twin, eliminate the twin digits in other boxes in this unit
                 for box in unit:
                     if values[box] != val:
                         for digit in val:
                             values[box] = values[box].replace(digit, '')
-    
     return values
             
             
@@ -157,10 +154,8 @@ def search(values):
         The sudoku in dictionary form if we find a solution
         False if we cannot find a solution
     """
-    
-    #reduce the puzzle using the previous function
+    #reduce the puzzle using the previous functions
     values = reduce_puzzle(values)
-
     if not values:
         return False
 
@@ -172,12 +167,10 @@ def search(values):
         len_unsolved_box = [len(values[box]) for box in unsolved_boxes]
         min_poss = min(len_unsolved_box)
         min_boxes = [box for box in unsolved_boxes if len(values[box]) == min_poss]
-        assert len(min_boxes) > 0
         min_box = min_boxes[0]
-        
         # use recursion to solve each one of the resulting sudokus, and if one returns a value (not False), return that answer!
         for digit in values[min_box]:
-            values_new = deepcopy(values)
+            values_new = values.copy()
             values_new[min_box] = digit
             values_new = search(values_new)
             if values_new:
