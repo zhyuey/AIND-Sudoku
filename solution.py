@@ -36,16 +36,15 @@ def naked_twins(values):
     """Eliminate values using the naked twins strategy.
     Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
-
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
-
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
     for unit in unitlist:
         
         val_two_list = [values[box] for box in unit if len(values[box]) == 2]
+        # make the list unique
         val_two_set = set(val_two_list)
         
         # a naked twin value is with length 2 and count 2
@@ -177,9 +176,9 @@ def search(values):
         min_box = min_boxes[0]
         
         # use recursion to solve each one of the resulting sudokus, and if one returns a value (not False), return that answer!
-        for i in range(min_prob):
+        for digit in values[min_box]:
             values_new = deepcopy(values)
-            values_new[min_box] = values[min_box][i]
+            values_new[min_box] = digit
             values_new = search(values_new)
             if values_new:
                 return values_new
